@@ -1,4 +1,4 @@
-﻿namespace Core.Infrastructure
+namespace Core.Infrastructure
 {
     public class LoadLevelState : IPayloadedState<string>
     {
