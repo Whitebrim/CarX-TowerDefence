@@ -1,3 +1,6 @@
+using Core.Infrastructure.Services;
+using Core.Infrastructure.States;
+
 namespace Core.Infrastructure
 {
     public class Game
@@ -6,7 +9,7 @@ namespace Core.Infrastructure
 
         public Game(ICoroutineRunner coroutineRunner)
         {
-            StateMachine = new GameStateMachine(new SceneLoader(coroutineRunner));
+            StateMachine = new GameStateMachine(DI.Container);
         }
     }
 }

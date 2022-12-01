@@ -3,9 +3,9 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Core.Infrastructure
+namespace Core.Services
 {
-    public class SceneLoader
+    public class SceneLoader : ISceneLoader
     {
         private readonly ICoroutineRunner _coroutineRunner;
 
@@ -19,7 +19,7 @@ namespace Core.Infrastructure
         {
             if (SceneManager.GetActiveScene().name != sceneName)
             {
-                var waitSceneLoad = SceneManager.LoadSceneAsync(sceneName);
+                AsyncOperation waitSceneLoad = SceneManager.LoadSceneAsync(sceneName);
 
                 yield return new WaitUntil(() => waitSceneLoad.isDone);
             }

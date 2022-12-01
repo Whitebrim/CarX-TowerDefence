@@ -1,21 +1,27 @@
-namespace Core.Infrastructure
+using Core.Infrastructure.Services;
+using Core.Services;
+
+namespace Core.Infrastructure.States
 {
     public class BootstrapState : IState
     {
         private const string Bootstrap = "Bootstrap";
         private const string Game = "Game";
         private readonly GameStateMachine _stateMachine;
-        private readonly SceneLoader _sceneLoader;
+        private readonly ISceneLoader _sceneLoader;
+        private readonly DI _services;
 
-        public BootstrapState(GameStateMachine stateMachine, SceneLoader sceneLoader)
+        public BootstrapState(GameStateMachine stateMachine, DI services)
         {
             _stateMachine = stateMachine;
-            _sceneLoader = sceneLoader;
+            _services = services;
+
+            RegisterServices();
+            _sceneLoader = _services.Single<ISceneLoader>();
         }
 
         public void Enter()
         {
-            RegisterServices();
             _sceneLoader.Load(Bootstrap, EnterLoadLevel);
         }
 
@@ -27,6 +33,7 @@ namespace Core.Infrastructure
 
         private void RegisterServices()
         {
+            _services.RegisterSingle<ISceneLoader>(new SceneLoader(_services.Single<ICoroutineRunner>()));
         }
     }
 }

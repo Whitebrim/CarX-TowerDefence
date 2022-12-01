@@ -1,19 +1,22 @@
+using Core.Infrastructure.Services;
+using Core.Services;
 using System;
 using System.Collections.Generic;
 
-namespace Core.Infrastructure
+namespace Core.Infrastructure.States
 {
     public class GameStateMachine
     {
         private readonly Dictionary<Type, IBaseState> _states;
         private IBaseState _currentState;
 
-        public GameStateMachine(SceneLoader sceneLoader)
+        public GameStateMachine(DI services)
         {
             _states = new Dictionary<Type, IBaseState>
             {
-                [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader),
-                [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader),
+                [typeof(BootstrapState)] = new BootstrapState(this, services),
+                [typeof(LoadLevelState)] = new LoadLevelState(this, services.Single<ISceneLoader>()),
+                [typeof(GameLoopState)] = new GameLoopState(this),
             };
         }
 
