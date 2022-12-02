@@ -1,5 +1,6 @@
 using Core.Infrastructure.Services;
 using Core.Services;
+using Core.Services.AssetManagement;
 
 namespace Core.Infrastructure.States
 {
@@ -34,6 +35,7 @@ namespace Core.Infrastructure.States
         private void RegisterServices()
         {
             _services.RegisterSingle<ISceneLoader>(new SceneLoader(_services.Single<ICoroutineRunner>()));
+            _services.RegisterSingle<IAssetProvider>(new AddressablesProvider());
         }
     }
 }

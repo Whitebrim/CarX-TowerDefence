@@ -2,6 +2,7 @@ using Core.Infrastructure.Services;
 using Core.Services;
 using System;
 using System.Collections.Generic;
+using Core.Services.AssetManagement;
 
 namespace Core.Infrastructure.States
 {
@@ -16,7 +17,7 @@ namespace Core.Infrastructure.States
             {
                 [typeof(BootstrapState)] = new BootstrapState(this, services),
                 [typeof(LoadLevelState)] = new LoadLevelState(this, services.Single<ISceneLoader>()),
-                [typeof(GameLoopState)] = new GameLoopState(this),
+                [typeof(GameLoopState)] = new GameLoopState(this, services, services.Single<IAssetProvider>()),
             };
         }
 
