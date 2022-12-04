@@ -1,4 +1,3 @@
-using System;
 using Enemies;
 using Services;
 using UnityEngine;
@@ -7,12 +6,12 @@ namespace Tower
 {
     public class CannonTower : MonoBehaviour, ITower
     {
+        private EnemySpawner _enemySpawner;
         private Enemy _target;
-        private EnemyController _enemyController;
 
         private void Update()
         {
-            _target ??= _enemyController.GetNearestEnemy(transform.position);
+            _target ??= _enemySpawner.GetNearestEnemy(transform.position);
             if (_target is not null)
             {
                 AimAtTarget();

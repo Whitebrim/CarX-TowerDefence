@@ -1,5 +1,5 @@
-using System;
 using Core.Infrastructure.Services;
+using System;
 
 namespace Core.Services
 {

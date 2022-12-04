@@ -10,12 +10,12 @@ namespace Enemies
         [SerializeField] protected float _speed;
         protected float _reachDistance = 0.3f;
 
-        protected EnemyController _enemyController;
+        protected EnemySpawner EnemySpawner;
         protected Vector3 _target;
 
         public Vector3 Position => transform.position;
 
-        public void Constructor(Enemy reference, Vector3 target, EnemyController enemyController)
+        public void Constructor(Enemy reference, Vector3 target, EnemySpawner enemySpawner)
         {
             _hp = reference._hp;
             _currentHp = reference._hp;
@@ -23,7 +23,7 @@ namespace Enemies
             _reachDistance = reference._reachDistance;
 
             _target = target;
-            _enemyController = enemyController;
+            EnemySpawner = enemySpawner;
         }
 
         protected void Update()
@@ -36,7 +36,7 @@ namespace Enemies
             _currentHp -= damage;
             if (_currentHp < 0)
             {
-                _enemyController.OnEnemyKilled(this);
+                EnemySpawner.OnEnemyKilled(this);
             }
         }
 
@@ -46,7 +46,7 @@ namespace Enemies
 
             if (Vector3.Distance(transform.position, _target) <= _reachDistance)
             {
-                _enemyController.OnEnemyReachedDestination(this);
+                EnemySpawner.OnEnemyReachedDestination(this);
             }
         }
     }
