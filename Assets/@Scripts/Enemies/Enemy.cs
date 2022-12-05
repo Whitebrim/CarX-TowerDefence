@@ -6,22 +6,27 @@ namespace Enemies
     public abstract class Enemy : MonoBehaviour, IDamageable
     {
         protected EnemyData Data;
-
         protected EnemySpawner EnemySpawner;
-        protected Vector3 Target;
+
+        private Vector3 _target;
 
         public Vector3 Position => transform.position;
+        public float Speed => Data.speed;
+        public Vector3 Target => _target;
 
         public void Constructor(EnemyData data, Vector3 target, EnemySpawner enemySpawner)
         {
             Data = data;
-            Target = target;
+            _target = target;
             EnemySpawner = enemySpawner;
         }
 
-        protected void Update()
+        public void CheckDestinationReached()
         {
-            ReachDestination();
+            if (Vector3.Distance(transform.position, Target) <= Data.reachDistance)
+            {
+                EnemySpawner.OnEnemyReachedDestination(this);
+            }
         }
 
         public void TakeDamage(float damage)
@@ -30,16 +35,6 @@ namespace Enemies
             if (Data.currentHp < 0)
             {
                 EnemySpawner.OnEnemyKilled(this);
-            }
-        }
-
-        private void ReachDestination()
-        {
-            transform.position = Vector3.MoveTowards(transform.position, Target, Data.speed * Time.deltaTime);
-
-            if (Vector3.Distance(transform.position, Target) <= Data.reachDistance)
-            {
-                EnemySpawner.OnEnemyReachedDestination(this);
             }
         }
     }
