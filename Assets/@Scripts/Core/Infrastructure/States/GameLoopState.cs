@@ -17,7 +17,7 @@ namespace Core.Infrastructure.States
         private readonly DI _services;
         private readonly IAssetProvider _assetProvider;
         private EnemySpawner _enemySpawner;
-        private GameData _gameData;
+        private GameConfig _gameConfig;
 
         public GameLoopState(GameStateMachine stateMachine, DI services, IAssetProvider assetProvider)
         {
@@ -29,7 +29,7 @@ namespace Core.Infrastructure.States
         public void Enter()
         {
             LoadGameData();
-            LoadLevel("Test Level");
+            LoadLevel(_gameConfig?.levels?.First()?.name); // TODO Add level selection
         }
 
         public void Exit()
@@ -38,23 +38,23 @@ namespace Core.Infrastructure.States
 
         private void LoadGameData()
         {
-            _gameData = (GameData)_assetProvider.Load<ScriptableObject>(AssetConstantPath.GameDataPath);
+            _gameConfig = (GameConfig)_assetProvider.Load<ScriptableObject>(AssetConstantPath.GameDataPath);
         }
 
         private void LoadLevel(string levelName)
         {
-            LevelData level = _gameData?.Levels?.FirstOrDefault((x) => x.name == levelName);
+            LevelConfig level = _gameConfig?.levels?.FirstOrDefault((x) => x.name == levelName);
             Assert.IsNotNull(level, $"Level named \"{levelName}\" does not exist in this game config!");
-
+            
             CreateEnemySpawner(ScriptableObject.Instantiate(level)).StartLevel();
         }
 
-        private EnemySpawner CreateEnemySpawner(LevelData levelData)
+        private EnemySpawner CreateEnemySpawner(LevelConfig levelConfig)
         {
             _enemySpawner = new EnemySpawner(
                 _assetProvider,
                 _services.Single<ICoroutineRunner>(),
-                levelData,
+                levelConfig,
                 GameObject.FindGameObjectWithTag(SpawnPositionTag).transform.position,
                 GameObject.FindGameObjectWithTag(TargetPositionTag).transform.position);
 

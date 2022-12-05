@@ -4,8 +4,9 @@ using UnityEngine;
 namespace Data
 {
     [CreateAssetMenu(fileName = "Level 0", menuName = "Scriptable Object/Level Data", order = 50)]
-    public class LevelData : ScriptableObject
+    public class LevelConfig : ScriptableObject
     {
-        public List<EnemyWave> EnemyWaves;
+        //public GameObject mapPrefab;
+        public List<EnemyWaveData> enemyWaves;
     }
 }

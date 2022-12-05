@@ -1,7 +1,9 @@
+using System;
 using NTC.Global.Pool;
 using Services;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Enemies
 {
@@ -12,18 +14,22 @@ namespace Enemies
         private readonly EnemySpawner _enemySpawner;
         public readonly List<Enemy> EnemyList;
 
+        private readonly Dictionary<string, Enemy> _cache;
+
         public EnemyFactory(Vector3 spawnPosition, Vector3 targetPosition, EnemySpawner enemySpawner)
         {
+            _cache = new Dictionary<string, Enemy>();
+
             _spawnPosition = spawnPosition;
             _targetPosition = targetPosition;
             _enemySpawner = enemySpawner;
             EnemyList = new List<Enemy>();
         }
 
-        public Enemy Create(Enemy enemy)
+        public Enemy Create(EnemyConfig enemy)
         {
-            var instance = NightPool.Spawn(enemy, _spawnPosition, Quaternion.identity);
-            instance.Constructor(enemy, _targetPosition, _enemySpawner);
+            Enemy instance = NightPool.Spawn(LoadEnemyPrefab(enemy.Prefab), _spawnPosition, Quaternion.identity);
+            instance.Constructor(enemy.Data, _targetPosition, _enemySpawner);
             EnemyList.Add(instance);
             return instance;
         }
@@ -32,6 +38,29 @@ namespace Enemies
         {
             EnemyList.Remove(enemy);
             NightPool.Despawn(enemy);
+        }
+
+        private Enemy LoadEnemyPrefab(AssetReferenceGameObject assetReference)
+        {
+            if (!_cache.ContainsKey(assetReference.AssetGUID))
+            {
+                _cache.Add(assetReference.AssetGUID, assetReference.LoadAssetAsync().WaitForCompletion().GetComponent<Enemy>());
+            }
+            return _cache[assetReference.AssetGUID];
+        }
+
+        private void LoadEnemyPrefabAsync(AssetReferenceGameObject assetReference, Action<Enemy> onLoad)
+        {
+            if (!_cache.ContainsKey(assetReference.AssetGUID))
+            {
+                assetReference.LoadAssetAsync().Completed += (result) =>
+                {
+                    _cache.Add(assetReference.AssetGUID, result.Result.GetComponent<Enemy>());
+                    onLoad?.Invoke(_cache[assetReference.AssetGUID]);
+                };
+                return;
+            }
+            onLoad?.Invoke(_cache[assetReference.AssetGUID]);
         }
     }
 }

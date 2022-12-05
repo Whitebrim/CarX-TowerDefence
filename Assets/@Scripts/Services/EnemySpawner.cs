@@ -5,8 +5,8 @@ using Data;
 using Enemies;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Services
@@ -14,21 +14,17 @@ namespace Services
     public class EnemySpawner : IService
     {
         private readonly IAssetProvider _assetProvider;
-        private readonly LevelData _levelData;
+        private readonly LevelConfig _levelConfig;
         private readonly EnemyFactory _enemyFactory;
 
         private readonly ICoroutineRunner _coroutineRunner;
         private Coroutine _spawnCoroutine;
 
-        private readonly Dictionary<string, Enemy> _prefabCache;
-
-        public EnemySpawner(IAssetProvider assetProvider, ICoroutineRunner coroutineRunner, LevelData levelData,
+        public EnemySpawner(IAssetProvider assetProvider, ICoroutineRunner coroutineRunner, LevelConfig levelConfig,
             Vector3 spawnPosition, Vector3 targetPosition)
         {
-            _prefabCache = new Dictionary<string, Enemy>();
-
             _assetProvider = assetProvider;
-            _levelData = levelData;
+            _levelConfig = levelConfig;
             _enemyFactory = new EnemyFactory(spawnPosition, targetPosition, this);
 
             _coroutineRunner = coroutineRunner;
@@ -46,11 +42,11 @@ namespace Services
 
         private void StartNextWave()
         {
-            if (_levelData.EnemyWaves.Count > 0)
+            if (_levelConfig.enemyWaves.Count > 0)
             {
-                EnemyWave wave = _levelData.EnemyWaves.First();
-                _levelData.EnemyWaves.RemoveAt(0);
-                StartWave(wave);
+                EnemyWaveData waveData = _levelConfig.enemyWaves.First();
+                _levelConfig.enemyWaves.RemoveAt(0);
+                StartWave(waveData);
             }
             else
             {
@@ -58,9 +54,9 @@ namespace Services
             }
         }
 
-        private void StartWave(EnemyWave wave)
+        private void StartWave(EnemyWaveData waveData)
         {
-            _spawnCoroutine = _coroutineRunner.StartCoroutine(SpawnWaveCoroutine(wave, StartNextWave));
+            _spawnCoroutine = _coroutineRunner.StartCoroutine(SpawnWaveCoroutine(waveData, StartNextWave));
         }
 
         private void StopWave()
@@ -68,29 +64,19 @@ namespace Services
             _coroutineRunner.StopCoroutine(_spawnCoroutine);
         }
 
-        private IEnumerator SpawnWaveCoroutine(EnemyWave wave, Action onWaveSpawned)
+        private IEnumerator SpawnWaveCoroutine(EnemyWaveData waveData, Action onWaveSpawned)
         {
-            yield return new WaitForSeconds(wave.WaveStartDelay);
-            while (wave.NumberOfEnemies > 0)
+            yield return new WaitForSeconds(waveData.waveStartDelay);
+            while (waveData.numberOfEnemies > 0)
             {
-                SpawnEnemy(GetEnemyPrefab(wave.Enemy.PrefabPath));
-                wave.NumberOfEnemies--;
-                yield return new WaitForSeconds(wave.EnemySpawnDelay);
+                SpawnEnemy(waveData.enemy);
+                waveData.numberOfEnemies--;
+                yield return new WaitForSeconds(waveData.enemySpawnDelay);
             }
             onWaveSpawned?.Invoke();
         }
 
-        private Enemy GetEnemyPrefab(string path)
-        {
-            if (!_prefabCache.ContainsKey(path))
-            {
-                _prefabCache.Add(path, _assetProvider.Load<GameObject>(path).GetComponent<Enemy>());
-            }
-
-            return _prefabCache[path];
-        }
-
-        private void SpawnEnemy(Enemy enemy) => _enemyFactory.Create(enemy);
+        private void SpawnEnemy(EnemyConfig enemy) => _enemyFactory.Create(enemy);
 
         public Enemy GetNearestEnemy(Vector3 position)
         {

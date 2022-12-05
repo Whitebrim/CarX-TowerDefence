@@ -4,18 +4,18 @@ using UnityEngine;
 namespace Data
 {
     [Serializable]
-    public struct EnemyWave
+    public struct EnemyWaveData
     {
         [Tooltip("Тип противников в этой волне")]
-        public EnemyData Enemy;
+        public EnemyConfig enemy;
 
         [Tooltip("Количество противников в этой волне")]
-        public int NumberOfEnemies;
+        public int numberOfEnemies;
 
         [Tooltip("Задержка перед началом этой волны в секундах")]
-        public float WaveStartDelay;
+        public float waveStartDelay;
 
         [Tooltip("Задержка между спавном противника в секундах")]
-        public float EnemySpawnDelay;
+        public float enemySpawnDelay;
     }
 }

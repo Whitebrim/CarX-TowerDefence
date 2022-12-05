@@ -1,8 +1,21 @@
+using System;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Enemy", menuName = "Scriptable Object/Enemy Data", order = 100)]
-public class EnemyData : ScriptableObject
+[Serializable]
+public struct EnemyData
 {
-    public string PrefabPath;
-    public int Level;
+    public const float DefaultReachDistance = .05f;
+
+    public float hp;
+    [HideInInspector] public float currentHp;
+    public float speed;
+    [Min(DefaultReachDistance)] public float reachDistance;
+
+    public EnemyData(float hp, float speed, float reachDistance = DefaultReachDistance)
+    {
+        this.hp = hp;
+        this.currentHp = hp;
+        this.speed = speed;
+        this.reachDistance = reachDistance;
+    }
 }
