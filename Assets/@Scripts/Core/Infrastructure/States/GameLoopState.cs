@@ -4,6 +4,7 @@ using Core.Services.AssetManagement;
 using Data;
 using Services;
 using System.Linq;
+using Towers;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -30,6 +31,29 @@ namespace Core.Infrastructure.States
         {
             LoadGameData();
             LoadLevel(_gameConfig?.levels?.First()?.name); // TODO Add level selection
+
+            #region DEMO
+
+            TowerBranchConfig cannonBranchConfig = (TowerBranchConfig)_assetProvider.Load<ScriptableObject>(AssetConstantPath.CannonBranchPath);
+            TowerBranchConfig crystalBranchConfig = (TowerBranchConfig)_assetProvider.Load<ScriptableObject>(AssetConstantPath.CrystalBranchPath);
+
+            TowerConfig cannonTowerConfig = cannonBranchConfig.Branch[Random.Range(0, cannonBranchConfig.Branch.Count)];
+            TowerConfig crystalTowerConfig = crystalBranchConfig.Branch[Random.Range(0, crystalBranchConfig.Branch.Count)];
+
+            var cannonTower = AddressablesProvider.LoadPrefab<Tower>(cannonTowerConfig.Prefab);
+            var crystalTower = AddressablesProvider.LoadPrefab<Tower>(crystalTowerConfig.Prefab);
+
+            var cannonTowerInstance = GameObject.Instantiate(cannonTower.gameObject,
+                new Vector3(-7.5f, 0, -2), Quaternion.identity).GetComponent<CannonTower>();
+            cannonTowerInstance.Constructor(cannonTowerConfig.Data, _services.Single<EnemySpawner>(),
+                cannonTowerConfig.Projectile);
+
+            var crystalTowerInstance = GameObject.Instantiate(crystalTower.gameObject,
+                new Vector3(7.5f, 0, -2), Quaternion.identity).GetComponent<CrystalTower>();
+            crystalTowerInstance.Constructor(crystalTowerConfig.Data, _services.Single<EnemySpawner>(),
+                crystalTowerConfig.Projectile);
+
+            #endregion
         }
 
         public void Exit()

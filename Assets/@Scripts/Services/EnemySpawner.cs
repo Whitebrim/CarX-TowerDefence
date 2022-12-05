@@ -76,8 +76,10 @@ namespace Services
 
         public Enemy GetNearestEnemy(Vector3 position)
         {
+            if (_factory.EnemyList.Count == 0) return null;
+
             var minDist = float.PositiveInfinity;
-            var index = 0;
+            var index = -1;
             for (var i = 0; i < _factory.EnemyList.Count; i++)
             {
                 float distance = Vector3.Distance(_factory.EnemyList[i].Position, position);
