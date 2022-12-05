@@ -10,7 +10,7 @@ using UnityEngine.Assertions;
 
 namespace Core.Infrastructure.States
 {
-    internal class GameLoopState : IState
+    public class GameLoopState : IState
     {
         private const string SpawnPositionTag = "Spawn Position";
         private const string TargetPositionTag = "Target Position";

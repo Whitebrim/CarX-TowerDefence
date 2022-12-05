@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Projectiles
 {
-    internal class ProjectileFactory
+    public class ProjectileFactory
     {
         private readonly ProjectileSpawner _spawner;
 
@@ -16,7 +16,7 @@ namespace Projectiles
 
         public Projectile Create(ProjectileConfig projectile, Vector3 position, Quaternion quaternion)
         {
-            Projectile instance = NightPool.Spawn(AddressablesProvider.LoadPrefab<Projectile>(projectile.Prefab), position, Quaternion.identity);
+            Projectile instance = NightPool.Spawn(AddressablesProvider.LoadPrefab<Projectile>(projectile.Prefab), position, quaternion);
             instance.Constructor(projectile.Data, _spawner);
             return instance;
         }

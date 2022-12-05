@@ -33,7 +33,7 @@ namespace Enemies
         public void TakeDamage(float damage)
         {
             Data.currentHp -= damage;
-            if (Data.currentHp < 0)
+            if (Data.currentHp <= 0)
             {
                 Spawner.OnEnemyKilled(this);
             }

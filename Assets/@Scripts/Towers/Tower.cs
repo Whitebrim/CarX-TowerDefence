@@ -10,7 +10,7 @@ namespace Towers
         protected TowerData Data { get; private set; }
         protected EnemySpawner EnemySpawner;
 
-        public virtual void Constructor(TowerData towerData, EnemySpawner enemySpawner)
+        public void Constructor(TowerData towerData, EnemySpawner enemySpawner)
         {
             EnemySpawner = enemySpawner;
             Data = towerData;

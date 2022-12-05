@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Enemies
 {
-    internal class EnemyFactory
+    public class EnemyFactory
     {
         private readonly Vector3 _spawnPosition;
         private readonly Vector3 _targetPosition;

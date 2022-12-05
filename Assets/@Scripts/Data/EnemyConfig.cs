@@ -17,6 +17,8 @@ namespace Data
             {
                 data.reachDistance = EnemyData.DefaultReachDistance;
             }
+
+            data.currentHp = data.hp;
         }
     }
 }

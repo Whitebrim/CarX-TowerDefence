@@ -6,7 +6,7 @@ namespace Projectiles
     public class GuidedProjectileMovement : MonoBehaviour
     {
         private Projectile _projectile;
-        private Transform _target;
+        public Transform Target;
 
         private void Start()
         {
@@ -15,7 +15,7 @@ namespace Projectiles
 
         private void Update()
         {
-            if (!_target)
+            if (!Target)
             {
                 _projectile.KillProjectile();
                 return;
@@ -25,7 +25,7 @@ namespace Projectiles
 
         private void Move()
         {
-            transform.position = Vector3.MoveTowards(transform.position, _target.position, _projectile.Speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, Target.position, _projectile.Speed * Time.deltaTime);
         }
     }
 }
