@@ -1,3 +1,4 @@
+using Data;
 using Services;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ namespace Enemies
     public abstract class Enemy : MonoBehaviour, IDamageable
     {
         protected EnemyData Data;
-        protected EnemySpawner EnemySpawner;
+        protected EnemySpawner Spawner;
 
         private Vector3 _target;
 
@@ -14,18 +15,18 @@ namespace Enemies
         public float Speed => Data.speed;
         public Vector3 Target => _target;
 
-        public void Constructor(EnemyData data, Vector3 target, EnemySpawner enemySpawner)
+        public void Constructor(EnemyData data, Vector3 target, EnemySpawner spawner)
         {
             Data = data;
             _target = target;
-            EnemySpawner = enemySpawner;
+            Spawner = spawner;
         }
 
         public void CheckDestinationReached()
         {
             if (Vector3.Distance(transform.position, Target) <= Data.reachDistance)
             {
-                EnemySpawner.OnEnemyReachedDestination(this);
+                Spawner.OnEnemyReachedDestination(this);
             }
         }
 
@@ -34,7 +35,7 @@ namespace Enemies
             Data.currentHp -= damage;
             if (Data.currentHp < 0)
             {
-                EnemySpawner.OnEnemyKilled(this);
+                Spawner.OnEnemyKilled(this);
             }
         }
     }

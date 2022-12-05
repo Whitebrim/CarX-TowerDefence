@@ -52,7 +52,6 @@ namespace Core.Infrastructure.States
         private EnemySpawner CreateEnemySpawner(LevelConfig levelConfig)
         {
             _enemySpawner = new EnemySpawner(
-                _assetProvider,
                 _services.Single<ICoroutineRunner>(),
                 levelConfig,
                 GameObject.FindGameObjectWithTag(SpawnPositionTag).transform.position,

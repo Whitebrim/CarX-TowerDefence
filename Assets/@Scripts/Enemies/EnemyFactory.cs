@@ -2,34 +2,35 @@ using System;
 using NTC.Global.Pool;
 using Services;
 using System.Collections.Generic;
+using Data;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace Enemies
 {
-    public class EnemyFactory
+    internal class EnemyFactory
     {
         private readonly Vector3 _spawnPosition;
         private readonly Vector3 _targetPosition;
-        private readonly EnemySpawner _enemySpawner;
+        private readonly EnemySpawner _spawner;
         public readonly List<Enemy> EnemyList;
 
         private readonly Dictionary<string, Enemy> _cache;
 
-        public EnemyFactory(Vector3 spawnPosition, Vector3 targetPosition, EnemySpawner enemySpawner)
+        public EnemyFactory(Vector3 spawnPosition, Vector3 targetPosition, EnemySpawner spawner)
         {
             _cache = new Dictionary<string, Enemy>();
 
             _spawnPosition = spawnPosition;
             _targetPosition = targetPosition;
-            _enemySpawner = enemySpawner;
+            _spawner = spawner;
             EnemyList = new List<Enemy>();
         }
 
         public Enemy Create(EnemyConfig enemy)
         {
             Enemy instance = NightPool.Spawn(LoadEnemyPrefab(enemy.Prefab), _spawnPosition, Quaternion.identity);
-            instance.Constructor(enemy.Data, _targetPosition, _enemySpawner);
+            instance.Constructor(enemy.Data, _targetPosition, _spawner);
             EnemyList.Add(instance);
             return instance;
         }

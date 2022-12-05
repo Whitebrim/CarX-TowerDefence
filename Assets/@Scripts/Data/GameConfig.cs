@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Data
 {
-    [CreateAssetMenu(fileName = "Game Data", menuName = "Scriptable Object/Game Data", order = 0)]
+    [CreateAssetMenu(fileName = "Game Config", menuName = "Scriptable Object/Game Config", order = 0)]
     public class GameConfig : ScriptableObject
     {
         [Tooltip("Список всех уровней в игре")]

@@ -1,20 +1,22 @@
-using Enemies;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 
-[CreateAssetMenu(fileName = "Enemy", menuName = "Scriptable Object/Enemy Data", order = 100)]
-public class EnemyConfig : ScriptableObject
+namespace Data
 {
-    // ReSharper disable once UnusedAutoPropertyAccessor.Local
-    [field: SerializeField] public AssetReferenceGameObject Prefab { get; private set; }
-    [SerializeField] private EnemyData data;
-    public EnemyData Data => data;
-
-    private void OnValidate()
+    [CreateAssetMenu(fileName = "Enemy", menuName = "Scriptable Object/Enemy Config", order = 100)]
+    public class EnemyConfig : ScriptableObject
     {
-        if (data.reachDistance == 0)
+        [field: SerializeField] public AssetReferenceGameObject Prefab { get; private set; }
+        [SerializeField] private EnemyData data;
+        public EnemyData Data => data;
+
+        private void OnValidate()
         {
-            data.reachDistance = EnemyData.DefaultReachDistance;
+            if (data.reachDistance == 0)
+            {
+                data.reachDistance = EnemyData.DefaultReachDistance;
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
-using Enemies;
-
-public class BasicEnemy : Enemy
+namespace Enemies
 {
+    public class BasicEnemy : Enemy
+    {
+    }
 }

@@ -1,31 +1,27 @@
 using Core.Infrastructure.Services;
 using Core.Services;
-using Core.Services.AssetManagement;
 using Data;
 using Enemies;
 using System;
 using System.Collections;
 using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Services
 {
     public class EnemySpawner : IService
     {
-        private readonly IAssetProvider _assetProvider;
         private readonly LevelConfig _levelConfig;
-        private readonly EnemyFactory _enemyFactory;
+        private readonly EnemyFactory _factory;
 
         private readonly ICoroutineRunner _coroutineRunner;
         private Coroutine _spawnCoroutine;
 
-        public EnemySpawner(IAssetProvider assetProvider, ICoroutineRunner coroutineRunner, LevelConfig levelConfig,
+        public EnemySpawner(ICoroutineRunner coroutineRunner, LevelConfig levelConfig,
             Vector3 spawnPosition, Vector3 targetPosition)
         {
-            _assetProvider = assetProvider;
             _levelConfig = levelConfig;
-            _enemyFactory = new EnemyFactory(spawnPosition, targetPosition, this);
+            _factory = new EnemyFactory(spawnPosition, targetPosition, this);
 
             _coroutineRunner = coroutineRunner;
         }
@@ -76,32 +72,32 @@ namespace Services
             onWaveSpawned?.Invoke();
         }
 
-        private void SpawnEnemy(EnemyConfig enemy) => _enemyFactory.Create(enemy);
+        private void SpawnEnemy(EnemyConfig enemy) => _factory.Create(enemy);
 
         public Enemy GetNearestEnemy(Vector3 position)
         {
             var minDist = float.PositiveInfinity;
             var index = 0;
-            for (var i = 0; i < _enemyFactory.EnemyList.Count; i++)
+            for (var i = 0; i < _factory.EnemyList.Count; i++)
             {
-                float distance = Vector3.Distance(_enemyFactory.EnemyList[i].Position, position);
+                float distance = Vector3.Distance(_factory.EnemyList[i].Position, position);
                 if (distance < minDist)
                 {
                     minDist = distance;
                     index = i;
                 }
             }
-            return _enemyFactory.EnemyList[index];
+            return _factory.EnemyList[index];
         }
 
         public void OnEnemyKilled(Enemy enemy)
         {
-            _enemyFactory.Destroy(enemy);
+            _factory.Destroy(enemy);
         }
 
         public void OnEnemyReachedDestination(Enemy enemy)
         {
-            _enemyFactory.Destroy(enemy);
+            _factory.Destroy(enemy);
         }
     }
 }

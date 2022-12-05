@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Tower
 {
-    public class CannonTower : MonoBehaviour, ITower
+    public class CannonTower : Tower
     {
         private EnemySpawner _enemySpawner;
         private Enemy _target;
