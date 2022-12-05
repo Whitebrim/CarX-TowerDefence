@@ -13,6 +13,7 @@ namespace Enemies
 
         public Vector3 Position => transform.position;
         public float Speed => Data.speed;
+        public Vector3 Forward => Vector3.Normalize(Target - Position);
         public Vector3 Target => _target;
 
         public void Constructor(EnemyData data, Vector3 target, EnemySpawner spawner)
