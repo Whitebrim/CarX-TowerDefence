@@ -15,6 +15,7 @@ namespace Enemies
         public float Speed => _data.speed;
         public Vector3 Forward => Vector3.Normalize(Destination - Position);
         public Vector3 Destination { get; private set; }
+        public bool IsAlive => gameObject.activeInHierarchy;
 
         public void Inject(EnemyData data, Vector3 target, EnemyDisposer disposer)
         {

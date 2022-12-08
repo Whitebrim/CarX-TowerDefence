@@ -13,7 +13,7 @@ namespace Towers
         protected override Projectile Shoot()
         {
             Projectile projectile = base.Shoot();
-            projectile.GetComponent<GuidedProjectileMovement>().Target = Target.transform;
+            projectile.GetComponent<GuidedProjectileMovement>().Target = Target;
             return projectile;
         }
 
