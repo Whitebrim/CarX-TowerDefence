@@ -58,8 +58,7 @@
 *.mp4 filter=lfs diff=lfs merge=lfs -text
 
 # 3D formats
-*.fbx filter=lfs diff=lfs merge=lfs -text
-*.FBX filter=lfs diff=lfs merge=lfs -text
+*.[Ff][Bb][Xx] filter=lfs diff=lfs merge=lfs -text
 *.obj filter=lfs diff=lfs merge=lfs -text
 *.max filter=lfs diff=lfs merge=lfs -text
 *.blend filter=lfs diff=lfs merge=lfs -text
