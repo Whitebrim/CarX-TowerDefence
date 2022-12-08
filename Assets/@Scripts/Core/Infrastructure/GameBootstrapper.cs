@@ -12,7 +12,7 @@ namespace Core.Infrastructure
         private void Awake()
         {
             DontDestroyOnLoad(this);
-            DI.Container.RegisterSingle<ICoroutineRunner>(this);
+            ServiceLocator.Container.RegisterSingle<ICoroutineRunner>(this);
 
             _game = new Game(this);
             _game.StateMachine.Enter<BootstrapState>();

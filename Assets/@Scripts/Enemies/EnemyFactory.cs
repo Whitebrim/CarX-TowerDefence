@@ -1,8 +1,8 @@
+using Core.Services.AssetManagement;
+using Data;
 using NTC.Global.Pool;
 using Services;
 using System.Collections.Generic;
-using Core.Services.AssetManagement;
-using Data;
 using UnityEngine;
 
 namespace Enemies
@@ -24,8 +24,9 @@ namespace Enemies
 
         public Enemy Create(EnemyConfig enemy)
         {
-            Enemy instance = NightPool.Spawn(AddressablesProvider.LoadPrefab<Enemy>(enemy.Prefab), _spawnPosition, Quaternion.identity);
-            instance.Constructor(enemy.Data, _targetPosition, _spawner);
+            Enemy instance = NightPool.Spawn(AddressablesProvider.LoadPrefab<Enemy>(enemy.Prefab), _spawnPosition,
+                Quaternion.identity);
+            instance.Inject(enemy.Data, _targetPosition, _spawner.Disposer);
             EnemyList.Add(instance);
             return instance;
         }

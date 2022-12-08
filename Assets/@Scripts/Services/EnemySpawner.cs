@@ -9,8 +9,11 @@ using UnityEngine;
 
 namespace Services
 {
-    public class EnemySpawner : IService
+    public class EnemySpawner : IService, IDisposable
     {
+        public readonly EnemyDisposer Disposer;
+        public readonly EnemyLocator Locator;
+
         private readonly LevelConfig _levelConfig;
         private readonly EnemyFactory _factory;
 
@@ -22,11 +25,18 @@ namespace Services
         {
             _levelConfig = levelConfig;
             _factory = new EnemyFactory(spawnPosition, targetPosition, this);
+            Disposer = new EnemyDisposer(_factory);
+            Locator = new EnemyLocator(_factory);
 
             _coroutineRunner = coroutineRunner;
         }
 
         ~EnemySpawner()
+        {
+            Dispose();
+        }
+
+        public void Dispose()
         {
             StopWave();
         }
@@ -69,37 +79,10 @@ namespace Services
                 waveData.numberOfEnemies--;
                 yield return new WaitForSeconds(waveData.enemySpawnDelay);
             }
+
             onWaveSpawned?.Invoke();
         }
 
-        private void SpawnEnemy(EnemyConfig enemy) => _factory.Create(enemy);
-
-        public Enemy GetNearestEnemy(Vector3 position)
-        {
-            if (_factory.EnemyList.Count == 0) return null;
-
-            var minDist = float.PositiveInfinity;
-            var index = -1;
-            for (var i = 0; i < _factory.EnemyList.Count; i++)
-            {
-                float distance = Vector3.Distance(_factory.EnemyList[i].Position, position);
-                if (distance < minDist)
-                {
-                    minDist = distance;
-                    index = i;
-                }
-            }
-            return _factory.EnemyList[index];
-        }
-
-        public void OnEnemyKilled(Enemy enemy)
-        {
-            _factory.Destroy(enemy);
-        }
-
-        public void OnEnemyReachedDestination(Enemy enemy)
-        {
-            _factory.Destroy(enemy);
-        }
+        private Enemy SpawnEnemy(EnemyConfig enemy) => _factory.Create(enemy);
     }
 }

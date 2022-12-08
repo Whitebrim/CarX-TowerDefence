@@ -15,12 +15,12 @@ namespace Core.Infrastructure.States
         private const string SpawnPositionTag = "Spawn Position";
         private const string TargetPositionTag = "Target Position";
         private readonly GameStateMachine _stateMachine;
-        private readonly DI _services;
+        private readonly ServiceLocator _services;
         private readonly IAssetProvider _assetProvider;
         private EnemySpawner _enemySpawner;
         private GameConfig _gameConfig;
 
-        public GameLoopState(GameStateMachine stateMachine, DI services, IAssetProvider assetProvider)
+        public GameLoopState(GameStateMachine stateMachine, ServiceLocator services, IAssetProvider assetProvider)
         {
             _stateMachine = stateMachine;
             _services = services;
@@ -34,26 +34,29 @@ namespace Core.Infrastructure.States
 
             #region DEMO
 
-            TowerBranchConfig cannonBranchConfig = (TowerBranchConfig)_assetProvider.Load<ScriptableObject>(AssetConstantPath.CannonBranchPath);
-            TowerBranchConfig crystalBranchConfig = (TowerBranchConfig)_assetProvider.Load<ScriptableObject>(AssetConstantPath.CrystalBranchPath);
+            var cannonBranchConfig =
+                (TowerBranchConfig)_assetProvider.Load<ScriptableObject>(AssetConstantPath.CannonBranchPath);
+            var crystalBranchConfig =
+                (TowerBranchConfig)_assetProvider.Load<ScriptableObject>(AssetConstantPath.CrystalBranchPath);
 
             TowerConfig cannonTowerConfig = cannonBranchConfig.Branch[Random.Range(0, cannonBranchConfig.Branch.Count)];
-            TowerConfig crystalTowerConfig = crystalBranchConfig.Branch[Random.Range(0, crystalBranchConfig.Branch.Count)];
+            TowerConfig crystalTowerConfig =
+                crystalBranchConfig.Branch[Random.Range(0, crystalBranchConfig.Branch.Count)];
 
             var cannonTower = AddressablesProvider.LoadPrefab<Tower>(cannonTowerConfig.Prefab);
             var crystalTower = AddressablesProvider.LoadPrefab<Tower>(crystalTowerConfig.Prefab);
 
             var cannonTowerInstance = GameObject.Instantiate(cannonTower.gameObject,
                 new Vector3(-7.5f, 0, -2), Quaternion.identity).GetComponent<CannonTower>();
-            cannonTowerInstance.Constructor(cannonTowerConfig.Data, _services.Single<EnemySpawner>(),
+            cannonTowerInstance.Inject(cannonTowerConfig.Data, _services.Single<EnemySpawner>().Locator,
                 cannonTowerConfig.Projectile);
 
             var crystalTowerInstance = GameObject.Instantiate(crystalTower.gameObject,
                 new Vector3(7.5f, 0, -2), Quaternion.identity).GetComponent<CrystalTower>();
-            crystalTowerInstance.Constructor(crystalTowerConfig.Data, _services.Single<EnemySpawner>(),
+            crystalTowerInstance.Inject(crystalTowerConfig.Data, _services.Single<EnemySpawner>().Locator,
                 crystalTowerConfig.Projectile);
 
-            #endregion
+            #endregion DEMO
         }
 
         public void Exit()
@@ -69,7 +72,7 @@ namespace Core.Infrastructure.States
         {
             LevelConfig level = _gameConfig?.levels?.FirstOrDefault((x) => x.name == levelName);
             Assert.IsNotNull(level, $"Level named \"{levelName}\" does not exist in this game config!");
-            
+
             CreateEnemySpawner(ScriptableObject.Instantiate(level)).StartLevel();
         }
 

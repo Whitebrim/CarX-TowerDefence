@@ -2,10 +2,10 @@ using System;
 
 namespace Core.Infrastructure.Services
 {
-    public class DI
+    public class ServiceLocator
     {
-        private static readonly Lazy<DI> LazyLoader = new Lazy<DI>(() => new DI());
-        public static DI Container => LazyLoader.Value;
+        private static readonly Lazy<ServiceLocator> LazyLoader = new Lazy<ServiceLocator>(() => new ServiceLocator());
+        public static ServiceLocator Container => LazyLoader.Value;
 
         public void RegisterSingle<TService>(TService implementation) where TService : IService =>
             Implementation<TService>.ServiceInstance = implementation;

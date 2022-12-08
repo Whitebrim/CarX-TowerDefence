@@ -11,7 +11,7 @@ namespace Core.Infrastructure.States
         private readonly Dictionary<Type, IBaseState> _states;
         private IBaseState _currentState;
 
-        public GameStateMachine(DI services)
+        public GameStateMachine(ServiceLocator services)
         {
             _states = new Dictionary<Type, IBaseState>
             {

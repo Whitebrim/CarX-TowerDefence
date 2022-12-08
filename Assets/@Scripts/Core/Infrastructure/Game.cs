@@ -10,7 +10,7 @@ namespace Core.Infrastructure
 
         public Game(ICoroutineRunner coroutineRunner)
         {
-            StateMachine = new GameStateMachine(DI.Container);
+            StateMachine = new GameStateMachine(ServiceLocator.Container);
         }
     }
 }

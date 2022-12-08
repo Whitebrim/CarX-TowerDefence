@@ -1,42 +1,42 @@
 using Data;
-using Services;
 using UnityEngine;
 
 namespace Enemies
 {
     public abstract class Enemy : MonoBehaviour, IDamageable
     {
-        protected EnemyData Data;
-        protected EnemySpawner Spawner;
+        [SerializeField] private Transform headshotPoint;
 
-        private Vector3 _target;
+        private EnemyData _data;
+        private EnemyDisposer _disposer;
 
         public Vector3 Position => transform.position;
-        public float Speed => Data.speed;
-        public Vector3 Forward => Vector3.Normalize(Target - Position);
-        public Vector3 Target => _target;
+        public Vector3 HeadshotPosition => headshotPoint.position;
+        public float Speed => _data.speed;
+        public Vector3 Forward => Vector3.Normalize(Destination - Position);
+        public Vector3 Destination { get; private set; }
 
-        public void Constructor(EnemyData data, Vector3 target, EnemySpawner spawner)
+        public void Inject(EnemyData data, Vector3 target, EnemyDisposer disposer)
         {
-            Data = data;
-            _target = target;
-            Spawner = spawner;
+            _data = data;
+            Destination = target;
+            _disposer = disposer;
         }
 
         public void CheckDestinationReached()
         {
-            if (Vector3.Distance(transform.position, Target) <= Data.reachDistance)
+            if (Vector3.Distance(transform.position, Destination) <= _data.reachDistance)
             {
-                Spawner.OnEnemyReachedDestination(this);
+                _disposer.OnEnemyReachedDestination(this);
             }
         }
 
         public void TakeDamage(float damage)
         {
-            Data.currentHp -= damage;
-            if (Data.currentHp <= 0)
+            _data.currentHp -= damage;
+            if (_data.currentHp <= 0)
             {
-                Spawner.OnEnemyKilled(this);
+                _disposer.OnEnemyKilled(this);
             }
         }
     }

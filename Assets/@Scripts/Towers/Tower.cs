@@ -1,6 +1,7 @@
 using Data;
-using Services;
+using Enemies;
 using UnityEngine;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace Towers
@@ -8,11 +9,11 @@ namespace Towers
     public abstract class Tower : MonoBehaviour
     {
         protected TowerData Data { get; private set; }
-        protected EnemySpawner EnemySpawner;
+        protected EnemyLocator EnemyLocator { get; private set; }
 
-        public void Constructor(TowerData towerData, EnemySpawner enemySpawner)
+        public void Inject(TowerData towerData, EnemyLocator enemyLocator)
         {
-            EnemySpawner = enemySpawner;
+            EnemyLocator = enemyLocator;
             Data = towerData;
         }
     }

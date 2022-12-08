@@ -17,7 +17,7 @@ namespace Projectiles
         public Projectile Create(ProjectileConfig projectile, Vector3 position, Quaternion quaternion)
         {
             Projectile instance = NightPool.Spawn(AddressablesProvider.LoadPrefab<Projectile>(projectile.Prefab), position, quaternion);
-            instance.Constructor(projectile.Data, _spawner);
+            instance.Inject(projectile.Data, _spawner);
             return instance;
         }
 

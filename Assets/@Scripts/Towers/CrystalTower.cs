@@ -7,7 +7,7 @@ namespace Towers
     {
         protected override void AimAtTarget()
         {
-            Debug.DrawLine(ShootingPoint.position, Target.Position, Color.cyan);
+            DebugDrawLine();
         }
 
         protected override Projectile Shoot()
@@ -15,6 +15,11 @@ namespace Towers
             Projectile projectile = base.Shoot();
             projectile.GetComponent<GuidedProjectileMovement>().Target = Target.transform;
             return projectile;
+        }
+
+        private void DebugDrawLine()
+        {
+            Debug.DrawLine(ShootingPoint.position, Target.HeadshotPosition, Color.cyan);
         }
 
         private void OnDrawGizmos()

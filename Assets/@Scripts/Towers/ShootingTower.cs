@@ -1,36 +1,42 @@
 using Data;
 using Enemies;
 using Projectiles;
-using Services;
 using UnityEngine;
+
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace Towers
 {
     public abstract class ShootingTower : Tower
     {
-        protected ProjectileConfig Projectile { get; private set; }
         [field: SerializeField] protected Transform ShootingPoint { get; private set; }
+        protected ProjectileConfig Projectile { get; private set; }
         protected Enemy Target { get; private set; }
-        protected ProjectileSpawner ProjectileSpawner { get; private set; }
-        protected float lastShootTime;
 
-        public void Constructor(TowerData towerData, EnemySpawner enemySpawner, ProjectileConfig projectileConfig)
+        private ProjectileSpawner _projectileSpawner;
+        private float _lastShootTime;
+
+        public void Inject(TowerData towerData, EnemyLocator enemyLocator, ProjectileConfig projectileConfig)
         {
-            Constructor(towerData, enemySpawner);
+            Inject(towerData, enemyLocator);
             Projectile = projectileConfig;
-            ProjectileSpawner = new ProjectileSpawner();
+            _projectileSpawner = new ProjectileSpawner();
         }
 
         protected virtual void Update()
         {
             FindNearestEnemy();
+            if (Target is null) return;
+
+            AimAtTarget();
+            TryShoot();
         }
 
         protected virtual void FindNearestEnemy()
         {
             if (Target is null || !Target.gameObject.activeInHierarchy)
             {
-                Target = EnemySpawner.GetNearestEnemy(transform.position);
+                Target = EnemyLocator.GetNearestEnemy(transform.position);
             }
 
             if (Target is null)
@@ -38,30 +44,26 @@ namespace Towers
                 return;
             }
 
-            if (Vector3.Distance(transform.position, Target.Position) > Data.AggroRadius)
+            if (Vector3.Distance(transform.position, Target.HeadshotPosition) > Data.AggroRadius)
             {
                 Target = null;
-                return;
             }
-
-            AimAtTarget();
-            TryShoot();
         }
 
         protected abstract void AimAtTarget();
 
-        protected virtual void TryShoot()
+        private void TryShoot()
         {
-            if (Time.time >= lastShootTime + Data.ShootInterval)
+            if (Time.time >= _lastShootTime + Data.ShootInterval)
             {
-                lastShootTime = Time.time;
+                _lastShootTime = Time.time;
                 Shoot();
             }
         }
 
         protected virtual Projectile Shoot()
         {
-            return ProjectileSpawner.SpawnProjectile(Projectile, ShootingPoint.position, ShootingPoint.rotation);
+            return _projectileSpawner.SpawnProjectile(Projectile, ShootingPoint.position, ShootingPoint.rotation);
         }
     }
 }

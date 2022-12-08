@@ -10,9 +10,9 @@ namespace Core.Infrastructure.States
         private const string Game = "Game";
         private readonly GameStateMachine _stateMachine;
         private readonly ISceneLoader _sceneLoader;
-        private readonly DI _services;
+        private readonly ServiceLocator _services;
 
-        public BootstrapState(GameStateMachine stateMachine, DI services)
+        public BootstrapState(GameStateMachine stateMachine, ServiceLocator services)
         {
             _stateMachine = stateMachine;
             _services = services;

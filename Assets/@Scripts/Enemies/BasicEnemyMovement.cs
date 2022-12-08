@@ -19,7 +19,8 @@ namespace Enemies
 
         private void ReachDestination()
         {
-            transform.position = Vector3.MoveTowards(transform.position, _enemy.Target, _enemy.Speed * Time.deltaTime);
+            transform.position =
+                Vector3.MoveTowards(transform.position, _enemy.Destination, _enemy.Speed * Time.deltaTime);
 
             _enemy.CheckDestinationReached();
         }

@@ -17,7 +17,7 @@ namespace Projectiles
         public float Speed => Data.speed;
         public float Damage => Data.damage;
 
-        public void Constructor(ProjectileData data, ProjectileSpawner spawner)
+        public void Inject(ProjectileData data, ProjectileSpawner spawner)
         {
             Data = data;
             Spawner = spawner;
