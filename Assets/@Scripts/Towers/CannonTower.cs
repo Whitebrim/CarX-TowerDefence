@@ -1,4 +1,3 @@
-using Projectiles;
 using UnityEngine;
 
 namespace Towers
@@ -17,14 +16,6 @@ namespace Towers
             DebugDrawLine(aimAt);
 
             RotateTower(lookDirection);
-
-            Debug.LogError(aimAt);
-        }
-
-        protected override Projectile Shoot()
-        {
-            Debug.LogError("Shooting");
-            return base.Shoot();
         }
 
         private void RotateTower(Vector3 lookDirection)
