@@ -19,7 +19,7 @@ namespace Enemies
             var index = -1;
             for (var i = 0; i < _factory.EnemyList.Count; i++)
             {
-                float distance = Vector3.Distance(_factory.EnemyList[i].Position, position);
+                float distance = Vector3.SqrMagnitude(position - _factory.EnemyList[i].Position);
                 if (distance < minDist)
                 {
                     minDist = distance;
