@@ -21,7 +21,7 @@ namespace Towers
         private void RotateTower(Vector3 lookDirection)
         {
             yaw.localRotation = Quaternion.LookRotation(new Vector3(lookDirection.x, 0, lookDirection.z));
-            pitch.localRotation = Quaternion.LookRotation(new Vector3(0, lookDirection.y, lookDirection.z));
+            pitch.localEulerAngles = new Vector3(Quaternion.LookRotation(lookDirection).eulerAngles.x, 0, 0);
         }
 
         /// <summary>
