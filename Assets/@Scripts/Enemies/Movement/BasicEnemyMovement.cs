@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Enemies
+namespace Enemies.Movement
 {
     [RequireComponent(typeof(Enemy))]
     public class BasicEnemyMovement : MonoBehaviour

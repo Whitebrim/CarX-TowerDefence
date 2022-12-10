@@ -1,7 +1,7 @@
 using NTC.Global.Pool;
 using UnityEngine;
 
-namespace Projectiles
+namespace Projectiles.Movement
 {
     [RequireComponent(typeof(Projectile))]
     public class GravityProjectileMovement : MonoBehaviour, IPoolItem

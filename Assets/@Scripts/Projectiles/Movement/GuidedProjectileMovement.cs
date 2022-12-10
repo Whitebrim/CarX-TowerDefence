@@ -1,7 +1,7 @@
 using Enemies;
 using UnityEngine;
 
-namespace Projectiles
+namespace Projectiles.Movement
 {
     [RequireComponent(typeof(Projectile))]
     public class GuidedProjectileMovement : MonoBehaviour

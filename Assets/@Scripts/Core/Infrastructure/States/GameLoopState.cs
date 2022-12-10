@@ -39,7 +39,8 @@ namespace Core.Infrastructure.States
             var crystalBranchConfig =
                 (TowerBranchConfig)_assetProvider.Load<ScriptableObject>(AssetConstantPath.CrystalBranchPath);
 
-            TowerConfig cannonTowerConfig = cannonBranchConfig.Branch[Random.Range(0, cannonBranchConfig.Branch.Count)];
+            TowerConfig cannonTowerConfig =
+                cannonBranchConfig.Branch[Random.Range(0, cannonBranchConfig.Branch.Count)];
             TowerConfig crystalTowerConfig =
                 crystalBranchConfig.Branch[Random.Range(0, crystalBranchConfig.Branch.Count)];
 
