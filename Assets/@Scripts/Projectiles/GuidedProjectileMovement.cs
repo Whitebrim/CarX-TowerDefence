@@ -1,4 +1,3 @@
-using Enemies;
 using UnityEngine;
 
 namespace Projectiles
@@ -7,7 +6,7 @@ namespace Projectiles
     public class GuidedProjectileMovement : MonoBehaviour
     {
         private Projectile _projectile;
-        public Enemy Target;
+        public Transform Target;
 
         private void Start()
         {
@@ -16,7 +15,7 @@ namespace Projectiles
 
         private void Update()
         {
-            if (!Target.IsAlive)
+            if (!Target)
             {
                 _projectile.KillProjectile();
                 return;
@@ -26,7 +25,7 @@ namespace Projectiles
 
         private void Move()
         {
-            transform.position = Vector3.MoveTowards(transform.position, Target.HeadshotPosition, _projectile.Speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, Target.position, _projectile.Speed * Time.deltaTime);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Towers
 
         protected virtual void FindNearestEnemy()
         {
-            if (Target is null || !Target.IsAlive)
+            if (Target is null || !Target.gameObject.activeInHierarchy)
             {
                 Target = EnemyLocator.GetNearestEnemy(transform.position);
             }
